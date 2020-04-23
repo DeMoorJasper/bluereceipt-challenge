@@ -6,7 +6,6 @@ import DropDownMenu from '../DropDownMenu/DropDownMenu';
 import ArrowIcon from '../Icons/ArrowIcon';
 import useHover from '../../../../utils/hooks/useHover';
 import CheckboxIcon from '../Icons/CheckboxIcon';
-import useClickOutside from '../../../../utils/hooks/useClickOutside';
 
 interface Option {
   /**
@@ -55,13 +54,8 @@ interface Props {
 const Select: FC<Props> = (props) => {
   const { placeholder, options, disabled, value = [], isMultiSelect, onChange } = props;
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const clickOutsideSelect = React.useCallback(() => {
-    if (showDropdown) {
-      setShowDropdown(!showDropdown);
-    }
-  }, [showDropdown]);
-  const containerReference = useClickOutside<HTMLDivElement>(clickOutsideSelect);
-  const isHovering = useHover(containerReference);
+  const triggerReference = useRef(null);
+  const isTriggerHovered = useHover(triggerReference);
   const [selectedoptions, setSelectedOptions] = React.useState<Array<Option>>([]);
   const label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
   const listboxReference = useRef<HTMLUListElement>(null);
@@ -123,7 +117,7 @@ const Select: FC<Props> = (props) => {
   };
 
   return (
-    <div className={classNames(styles.select, { [styles.disabled]: disabled })} ref={containerReference}>
+    <div className={classNames(styles.select, { [styles.disabled]: disabled })}>
       <button
         className={styles.trigger}
         type='button'
@@ -132,16 +126,18 @@ const Select: FC<Props> = (props) => {
         aria-haspopup='listbox'
         aria-expanded={showDropdown}
         disabled={disabled}
+        ref={triggerReference}
       >
         <span>{label || <span>&zwnj;</span>}</span>
         {/* There appears to be no up chevron icon for when dropdown is open :( */}
-        <ArrowIcon isHovered={isHovering && !disabled} />
+        <ArrowIcon isHovered={isTriggerHovered && !disabled} />
       </button>
       <DropDownMenu isOpen={showDropdown && !disabled}>
         <ul
           role='listbox'
           tabIndex={-1}
           ref={listboxReference}
+          onBlur={() => setShowDropdown(false)}
           onKeyDown={(event) => {
             // Down should select next option
             if (event.key === 'ArrowDown') {
@@ -189,14 +185,12 @@ const Select: FC<Props> = (props) => {
               <li
                 className={classNames(styles.option, { [styles.focusedoption]: focusedIndex === i })}
                 onClick={(event) => {
-                  if (isMultiSelect) {
-                    setFocusedIndex(i);
-                  }
-
-                  handleSelectOption(option.value);
-
-                  // Without this the button gets focus again
+                  // This is to prevent focus issues
                   event.preventDefault();
+
+                  // Set focused element and emit value
+                  setFocusedIndex(i);
+                  handleSelectOption(option.value);
                 }}
                 onKeyDown={() => {
                   // Keyboard handling is done by the listbox as seen in the aria spec
