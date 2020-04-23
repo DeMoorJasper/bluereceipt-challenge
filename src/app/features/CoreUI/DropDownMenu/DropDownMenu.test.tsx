@@ -1,68 +1,22 @@
 import React from 'react';
-import { render, cleanup, fireEvent } from '@testing-library/react';
+import { render, cleanup } from '@testing-library/react';
 
 import DropDownMenu from './DropDownMenu';
 
-const placeholder = 'input';
+const DROPDOWN_CONTENT = 'dropdown_content';
 
 describe('DropDownMenu', () => {
   afterEach(cleanup);
 
-  it('handles change event', () => {
-    const handleChange = jest.fn();
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} onChange={handleChange} />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    fireEvent.input(element, { target: { value: '42' } });
-    expect(handleChange).toHaveBeenCalled();
+  it('Hides dropdown if isOpen is false or undefined', () => {
+    const { queryByText } = render(<DropDownMenu>{DROPDOWN_CONTENT}</DropDownMenu>);
+    const element = queryByText(DROPDOWN_CONTENT);
+    expect(element).toBe(null);
   });
 
-  it('displays placeholder', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element).toBeInTheDocument();
-  });
-
-  it('supports text type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='text' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'text');
-  });
-
-  it('supports email type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='email' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'email');
-  });
-
-  it('supports number type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='number' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'number');
-  });
-
-  it('supports password type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='password' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'password');
-  });
-
-  it('can be disabled', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} disabled />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('disabled', '');
+  it('Shows dropdown if isOpen is true', () => {
+    const { getAllByText } = render(<DropDownMenu isOpen>{DROPDOWN_CONTENT}</DropDownMenu>);
+    const element = getAllByText(DROPDOWN_CONTENT);
+    expect(element.length).toBe(1);
   });
 });
