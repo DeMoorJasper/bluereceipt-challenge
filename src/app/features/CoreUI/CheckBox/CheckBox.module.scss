@@ -7,16 +7,6 @@
   align-items: center;
   padding: 5px;
 
-  &:hover {
-    .check {
-      border-color: $focus-color;
-    }
-  }
-
-  input:focus + .check {
-    border-color: $focus-color;
-  }
-
   span {
     color: $gray-700;
     font-size: $normal-font-size;
@@ -50,6 +40,14 @@
       stroke-miterlimit: 10;
       stroke-width: 2px;
     }
+  }
+
+  &:hover .check {
+    border-color: $focus-color;
+  }
+
+  input:focus + .check {
+    border-color: $focus-color;
   }
 
   input:checked + .check {

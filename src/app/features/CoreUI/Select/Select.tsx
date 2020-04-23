@@ -195,7 +195,7 @@ const Select: FC<Props> = (props) => {
 
                   handleSelectOption(option.value);
 
-                  // Without this the button gets focus again...
+                  // Without this the button gets focus again
                   event.preventDefault();
                 }}
                 onKeyDown={() => {
