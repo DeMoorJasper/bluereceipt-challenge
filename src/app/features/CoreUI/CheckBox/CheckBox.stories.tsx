@@ -9,4 +9,4 @@ export default {
   title: 'CheckBox',
 };
 
-export const normal = () => <CheckBox label='Test' id='check' name='check' />;
+export const normal = () => <CheckBox label='Test' id='check' name='check' onChange={action('onChange')} />;
