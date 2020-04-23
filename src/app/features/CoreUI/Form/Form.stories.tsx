@@ -6,6 +6,7 @@ import '../../App/Root/Root.scss';
 import FormInput from '../FormInput/FormInput';
 import TwoColumnGrid from '../TwoColumnGrid/TwoColumnGrid';
 import Button from '../Button/Button';
+import CheckBox from '../CheckBox/CheckBox';
 
 export default { title: 'Form' };
 
@@ -53,18 +54,14 @@ const Form: FC<Props> = ({ onSubmit }) => {
           ref={register({ required: true })}
           error={errors.email && 'E-Mail is required.'}
         />
-        <FormInput
-          fillWidth
-          label='Phone Number'
-          name='phone'
-          ref={register({})}
-        />
-        <Button size='big' type='submit'>Submit</Button>
+        <FormInput fillWidth label='Phone Number' name='phone' ref={register({})} />
+        <CheckBox label='Customer Accepts Marketing' name='acceptMarketing' id='acceptMarketing' ref={register({})} />
+        <Button size='big' type='submit'>
+          Submit
+        </Button>
       </TwoColumnGrid>
     </form>
   );
 };
 
-export const normal = () => (
-  <Form onSubmit={action('submit')} />
-);
+export const normal = () => <Form onSubmit={action('submit')} />;

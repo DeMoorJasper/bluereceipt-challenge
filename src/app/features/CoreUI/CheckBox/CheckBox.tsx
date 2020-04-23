@@ -37,7 +37,7 @@ interface Props {
   ref?: Ref<HTMLInputElement>;
 }
 
-const Input: FC<Props> = forwardRef((props, ref) => {
+const CheckBox: FC<Props> = forwardRef((props, ref) => {
   const { id, name, label, value, onChange } = props;
 
   return (
@@ -53,4 +53,4 @@ const Input: FC<Props> = forwardRef((props, ref) => {
   );
 });
 
-export default Input;
+export default CheckBox;
