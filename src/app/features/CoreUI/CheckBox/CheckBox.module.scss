@@ -1,0 +1,59 @@
+@import "../variables.scss";
+
+.checkbox {
+  $focus-color: #6f88a1;
+
+  display: flex;
+  align-items: center;
+  padding: 5px;
+
+  &:hover {
+    .check {
+      border-color: $focus-color;
+    }
+  }
+
+  input:focus + .check {
+    border-color: $focus-color;
+  }
+
+  span {
+    color: $gray-700;
+    font-size: $normal-font-size;
+    font-weight: 500;
+    margin-left: 12px;
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .check {
+    position: relative;
+    width: 15px;
+    border-radius: 1px;
+    height: 15px;
+    border: 2px solid $gray-300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      height: 10px;
+      width: 10px;
+      fill: none;
+      stroke: $white;
+      stroke-miterlimit: 10;
+      stroke-width: 2px;
+    }
+  }
+
+  input:checked + .check {
+    border-color: $blue-600;
+    background-color: $blue-600;
+  }
+}
