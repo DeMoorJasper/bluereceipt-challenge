@@ -9,16 +9,46 @@ import CheckboxIcon from '../Icons/CheckboxIcon';
 import useClickOutside from '../../../../utils/hooks/useClickOutside';
 
 interface Option {
+  /**
+   * value is the value that gets returned in onChange
+   */
   value: string;
+
+  /**
+   * label is the text that gets displayed to the user (mainly useful if value is different from label as in i18n)
+   */
   label: string;
 }
 
 interface Props {
+  /**
+   * Placeholder is being shown in case no options are selected
+   */
   placeholder?: string;
+
+  /**
+   * The possible options a user can select
+   */
   options: Array<Option>;
+
+  /**
+   * Disabled ensures user cannot select any option and shows the select in a disabled style
+   */
   disabled?: boolean;
+
+  /**
+   * Value contains the currently selected value(s)
+   */
   value?: Array<string>;
+
+  /**
+   * onChange is triggered every time an option is selected, with the selected options as a parameter
+   */
   onChange?: (value: Array<string>) => void;
+
+  /**
+   * isMultiSelect enables the multiselect capabilities of the select
+   */
   isMultiSelect?: boolean;
 }
 
@@ -70,7 +100,7 @@ const Select: FC<Props> = (props) => {
     const foundIndex = value.findIndex((currentValue: string) => currentValue === selectedValue);
     if (!isMultiSelect) {
       setShowDropdown(false);
-      return handleChange([selectedValue]);
+      return handleChange(foundIndex > -1 ? [] : [selectedValue]);
     }
 
     const valueClone = [...value];
@@ -139,9 +169,14 @@ const Select: FC<Props> = (props) => {
               setFocusedIndex(options.length - 1);
             }
 
-            // Enter or space, not entirely sure if space should select an option
+            // Enter or space
             if (event.key === 'Enter' || event.keyCode === 32) {
               handleSelectOption(options[focusedIndex].value);
+            }
+
+            // Close using Escape
+            if (event.key === 'Escape') {
+              setShowDropdown(false);
             }
           }}
         >
