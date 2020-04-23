@@ -32,17 +32,36 @@ interface Props {
   value?: string;
 
   /**
+   * Disabled the checkbox
+   */
+  disabled?: boolean;
+
+  /**
+   * An id used for getting the input in tests
+   */
+  testId?: string;
+
+  /**
    * React ref passtrough to input node
    */
   ref?: Ref<HTMLInputElement>;
 }
 
 const CheckBox: FC<Props> = forwardRef((props, ref) => {
-  const { id, name, label, value, onChange } = props;
+  const { id, name, label, value, onChange, testId, disabled } = props;
 
   return (
     <label htmlFor={id} className={styles.checkbox}>
-      <input type='checkbox' name={name} id={id} ref={ref} value={value} onChange={onChange} />
+      <input
+        type='checkbox'
+        name={name}
+        id={id}
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        data-testid={testId}
+        disabled={disabled}
+      />
       <div className={styles.check}>
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10.73 7.96'>
           <polyline points='10.03 0.71 4.13 6.55 0.71 3.12' />

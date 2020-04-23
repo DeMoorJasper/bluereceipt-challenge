@@ -1,68 +1,34 @@
 import React from 'react';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 
-import Input from './CheckBox';
+import CheckBox from './CheckBox';
 
-const placeholder = 'input';
+const label = 'this is a label';
 
-describe('Input', () => {
+describe('CheckBox', () => {
   afterEach(cleanup);
 
   it('handles change event', () => {
     const handleChange = jest.fn();
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} onChange={handleChange} />,
+    const { getByTestId } = render(
+      <CheckBox label={label} id='check' name='check' onChange={handleChange} testId='check' />,
     );
-    const element = getByPlaceholderText(placeholder);
-    fireEvent.input(element, { target: { value: '42' } });
+    const element = getByTestId('check');
+    fireEvent.click(element, { target: { checked: true } });
     expect(handleChange).toHaveBeenCalled();
   });
 
-  it('displays placeholder', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} />,
-    );
-    const element = getByPlaceholderText(placeholder);
+  it('displays label', () => {
+    const { getByText } = render(<CheckBox label={label} id='check' name='check' testId='check' />);
+    const element = getByText(label);
     expect(element).toBeInTheDocument();
   });
 
-  it('supports text type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='text' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'text');
-  });
-
-  it('supports email type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='email' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'email');
-  });
-
-  it('supports number type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='number' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'number');
-  });
-
-  it('supports password type', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} type='password' />,
-    );
-    const element = getByPlaceholderText(placeholder);
-    expect(element.closest('input')).toHaveAttribute('type', 'password');
-  });
-
   it('can be disabled', () => {
-    const { getByPlaceholderText } = render(
-      <Input placeholder={placeholder} disabled />,
+    const { getByTestId } = render(
+      <CheckBox label={label} id='check' name='check' onChange={() => {}} testId='check' disabled />,
     );
-    const element = getByPlaceholderText(placeholder);
+    const element = getByTestId('check');
     expect(element.closest('input')).toHaveAttribute('disabled', '');
   });
 });
