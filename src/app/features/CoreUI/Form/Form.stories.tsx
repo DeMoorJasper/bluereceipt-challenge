@@ -8,6 +8,7 @@ import TwoColumnGrid from '../TwoColumnGrid/TwoColumnGrid';
 import Button from '../Button/Button';
 import CheckBox from '../CheckBox/CheckBox';
 import Select from '../Select/Select';
+import Label from '../Label/Label';
 
 export default { title: 'Form' };
 
@@ -84,16 +85,18 @@ const Form: FC<Props> = ({ onSubmit }) => {
         />
         <FormInput fillWidth label='Phone Number' name='phone' ref={register({})} />
         <CheckBox label='Customer Accepts Marketing' name='acceptMarketing' id='acceptMarketing' ref={register({})} />
-        <Select
-          options={[...MARKETING_ROLE_OPTIONS]}
-          placeholder='Select a marketing role'
-          value={marketingRoleValue}
-          onChange={(selectedOptions) => {
-            setMarketingRoleValue(selectedOptions);
-            setValue('marketingRole', selectedOptions);
-          }}
-          isMultiSelect
-        />
+        <Label title='Marketing Role'>
+          <Select
+            options={[...MARKETING_ROLE_OPTIONS]}
+            placeholder='Select a marketing role'
+            value={marketingRoleValue}
+            onChange={(selectedOptions) => {
+              setMarketingRoleValue(selectedOptions);
+              setValue('marketingRole', selectedOptions);
+            }}
+            isMultiSelect
+          />
+        </Label>
         <Button size='big' type='submit'>
           Submit
         </Button>

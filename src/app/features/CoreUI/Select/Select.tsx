@@ -112,7 +112,7 @@ const Select: FC<Props> = (props) => {
     return handleChange(valueClone);
   };
 
-  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'Enter' || event.keyCode === 32) {
       setShowDropdown(!showDropdown);
     }
@@ -124,17 +124,19 @@ const Select: FC<Props> = (props) => {
 
   return (
     <div className={classNames(styles.select, { [styles.disabled]: disabled })} ref={containerReference}>
-      <div
+      <button
         className={styles.trigger}
-        onClick={disabled ? undefined : handleTriggerClick}
-        onKeyDown={disabled ? undefined : handleTriggerKeyDown}
-        role={disabled ? undefined : 'button'}
-        tabIndex={disabled ? undefined : 0}
+        type='button'
+        onClick={handleTriggerClick}
+        onKeyDown={handleTriggerKeyDown}
+        aria-haspopup='listbox'
+        aria-expanded={showDropdown}
+        disabled={disabled}
       >
         <span>{label || <span>&zwnj;</span>}</span>
         {/* There appears to be no up chevron icon for when dropdown is open :( */}
         <ArrowIcon isHovered={isHovering && !disabled} />
-      </div>
+      </button>
       <DropDownMenu isOpen={showDropdown && !disabled}>
         <ul
           role='listbox'
@@ -186,12 +188,15 @@ const Select: FC<Props> = (props) => {
             return (
               <li
                 className={classNames(styles.option, { [styles.focusedoption]: focusedIndex === i })}
-                onClick={() => {
+                onClick={(event) => {
                   if (isMultiSelect) {
                     setFocusedIndex(i);
                   }
 
                   handleSelectOption(option.value);
+
+                  // Without this the button gets focus again...
+                  event.preventDefault();
                 }}
                 onKeyDown={() => {
                   // Keyboard handling is done by the listbox as seen in the aria spec
