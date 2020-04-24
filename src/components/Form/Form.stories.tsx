@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { action } from '@storybook/addon-actions';
 
-import '../../App/Root/Root.scss';
+import '../../Root.scss';
 import FormInput from '../FormInput/FormInput';
 import TwoColumnGrid from '../TwoColumnGrid/TwoColumnGrid';
 import Button from '../Button/Button';

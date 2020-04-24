@@ -3,9 +3,8 @@ import classNames from 'classnames';
 
 import styles from './Select.module.scss';
 import DropDownMenu from '../DropDownMenu/DropDownMenu';
-import ArrowIcon from '../Icons/ArrowIcon';
-import useHover from '../../../../utils/hooks/useHover';
 import CheckboxIcon from '../Icons/CheckboxIcon';
+import DropDownIcon from '../Icons/DropDownIcon';
 
 interface Option {
   /**
@@ -54,8 +53,6 @@ interface Props {
 const Select: FC<Props> = (props) => {
   const { placeholder, options, disabled, value = [], isMultiSelect, onChange } = props;
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const triggerReference = useRef(null);
-  const isTriggerHovered = useHover(triggerReference);
   const [selectedoptions, setSelectedOptions] = React.useState<Array<Option>>([]);
   const label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
   const listboxReference = useRef<HTMLUListElement>(null);
@@ -126,11 +123,9 @@ const Select: FC<Props> = (props) => {
         aria-haspopup='listbox'
         aria-expanded={showDropdown}
         disabled={disabled}
-        ref={triggerReference}
       >
         <span>{label || <span>&zwnj;</span>}</span>
-        {/* There appears to be no up chevron icon for when dropdown is open :( */}
-        <ArrowIcon isHovered={isTriggerHovered && !disabled} />
+        <DropDownIcon />
       </button>
       <DropDownMenu isOpen={showDropdown && !disabled}>
         <ul
@@ -157,12 +152,12 @@ const Select: FC<Props> = (props) => {
               }
             }
 
-            // Home should select first option, aria spec
+            // Home should select first option
             if (event.keyCode === 36) {
               setFocusedIndex(0);
             }
 
-            // End should select last option, aria spec
+            // End should select last option
             if (event.keyCode === 35) {
               setFocusedIndex(options.length - 1);
             }
@@ -193,7 +188,7 @@ const Select: FC<Props> = (props) => {
                   handleSelectOption(option.value);
                 }}
                 onKeyDown={() => {
-                  // Keyboard handling is done by the listbox as seen in the aria spec
+                  // Keyboard handling is done by the listbox
                 }}
                 aria-selected={isSelected}
                 role='option'

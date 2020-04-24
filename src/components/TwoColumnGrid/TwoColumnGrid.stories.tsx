@@ -1,7 +1,7 @@
 import React from 'react';
 
 import TwoColumnGrid from './TwoColumnGrid';
-import '../../App/Root/Root.scss';
+import '../../Root.scss';
 import Label from '../Label/Label';
 import Input from '../Input/Input';
 import Button from '../Button/Button';

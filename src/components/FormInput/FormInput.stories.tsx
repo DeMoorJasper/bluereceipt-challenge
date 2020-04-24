@@ -2,7 +2,7 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 
 import FormInput from './FormInput';
-import '../../App/Root/Root.scss';
+import '../../Root.scss';
 
 export default {
   component: FormInput,

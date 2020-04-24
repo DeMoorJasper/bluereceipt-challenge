@@ -10,7 +10,7 @@ import PopupIcon from './PopupIcon';
 import AbandonedCartIcon from './AbandonedCartIcon';
 import KeywordsIcon from './KeywordsIcon';
 import LogoIcon from './LogoIcon';
-import '../../App/Root/Root.scss';
+import '../../Root.scss';
 import DropDownIcon from './DropDownIcon';
 import BurgerMenuIcon from './BurgerMenuIcon';
 import CrossIcon from './CrossIcon';

@@ -4,13 +4,6 @@ import styles from './CheckBox.module.scss';
 
 interface Props {
   /**
-   * id is used for letting the label know which input to focus.
-   * This isn't really a requirement but is generally better accessibility wise
-   * See: https://www.w3.org/WAI/tutorials/forms/labels/#associating-labels-implicitly
-   */
-  id: string;
-
-  /**
    * Identifier for form submit
    */
   name: string;
@@ -22,7 +15,7 @@ interface Props {
 
   /**
    * Register callback for change event
-   * Maybe change this to (checked: boolean) => void; ?
+   * TODO: Maybe change this to `(checked: boolean) => void;` ?
    */
   onChange?: (evt: React.ChangeEvent<HTMLInputElement>) => void;
 
@@ -48,14 +41,13 @@ interface Props {
 }
 
 const CheckBox: FC<Props> = forwardRef((props, ref) => {
-  const { id, name, label, value, onChange, testId, disabled } = props;
+  const { name, label, value, onChange, testId, disabled } = props;
 
   return (
-    <label htmlFor={id} className={styles.checkbox}>
+    <label className={styles.checkbox}>
       <input
         type='checkbox'
         name={name}
-        id={id}
         ref={ref}
         value={value}
         onChange={onChange}

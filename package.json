@@ -6,16 +6,9 @@
   "proxy": "http://localhost:3001",
   "scripts": {
     "ts:css": "tsm src/**/*.module.scss -s -c -p",
-    "start": "concurrently \"npm:ts:css -- -w\" \"react-scripts start\"",
-    "build": "npm run ts:css && react-scripts build",
+    "build": "npm run ts:css",
     "test": "concurrently \"npm:ts:css\" \"react-scripts test\"",
     "test:ci": "CI=true concurrently \"npm:ts:css\" \"react-scripts test\"",
-    "test:watch": "concurrently \"npm:ts:css -- -w\" \"react-scripts test\"",
-    "lint:ts": "tsc && yarn lint:eslint",
-    "lint:eslint": "eslint --ext=jsx,ts,tsx 'src/**/*.{ts,tsx}'",
-    "lint:css": "stylelint --syntax scss \"src/**/*.scss\"",
-    "lint": "yarn run lint:ts && yarn run lint:css",
-    "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public -o build/storybook"
   },

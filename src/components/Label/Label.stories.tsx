@@ -2,7 +2,7 @@
 import React from 'react';
 
 import Label from './Label';
-import '../../App/Root/Root.scss';
+import '../../Root.scss';
 import Input from '../Input/Input';
 
 export default {
