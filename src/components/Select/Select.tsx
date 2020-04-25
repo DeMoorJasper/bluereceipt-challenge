@@ -53,26 +53,14 @@ interface Props {
 const Select: FC<Props> = (props) => {
   const { placeholder, options, disabled, value = [], isMultiSelect, onChange } = props;
   const [showDropdown, setShowDropdown] = React.useState(false);
-  const [selectedoptions, setSelectedOptions] = React.useState<Array<Option>>([]);
-  const label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
   const listboxReference = useRef<HTMLUListElement>(null);
   const [focusedIndex, setFocusedIndex] = React.useState<number>(0);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
-    const newSelectedOptions: Array<Option> = value
-      .map((currentValue) => {
-        const foundOption = options.find((option) => option.value === currentValue);
-        if (foundOption) {
-          return foundOption;
-        }
-        return null;
-      })
+  const selectedoptions = React.useMemo<Array<Option>>((): Array<Option> => {
+    return value
+      .map((currentValue) => options.find((option) => option.value === currentValue))
       .filter((option) => !!option);
-
-    setSelectedOptions(newSelectedOptions);
-  }, [value.join(',')]);
+  }, [value]);
+  const label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
 
   useEffect(() => {
     if (listboxReference && listboxReference.current && showDropdown) {
