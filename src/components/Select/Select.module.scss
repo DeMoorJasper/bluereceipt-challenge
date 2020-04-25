@@ -31,25 +31,10 @@
     }
   }
 
-  .option {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 10px 15px;
-    border-bottom: 1px solid $gray-200;
-
-    &.focusedoption {
-      background-color: $gray-100;
-    }
-
-    svg + span {
-      margin-left: 10px;
-    }
-  }
-
-  ul,
-  li {
+  ul {
     padding: 0;
     margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
   }
 }

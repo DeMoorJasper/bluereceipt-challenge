@@ -2,6 +2,10 @@
 
 My solution to the Blue Receipt coding challenge.
 
+I've mainly made this as I just wanted to see how hard it would be to make an accessible select.
+
+Also I'm currently kind of looking for a remote job. So, if anyone who's reading this is hiring, hit me up.
+
 ## Challenge
 
 This challenge is about creating several ui core components from the given design.

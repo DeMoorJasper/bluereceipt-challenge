@@ -1,10 +1,11 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useCallback } from 'react';
 import classNames from 'classnames';
 
+import Option from './Option';
 import styles from './Select.module.scss';
 import DropDownMenu from '../DropDownMenu/DropDownMenu';
-import CheckboxIcon from '../Icons/CheckboxIcon';
 import DropDownIcon from '../Icons/DropDownIcon';
+import useClickOutside from '../../utils/hooks/useClickOutside';
 
 interface Option {
   /**
@@ -51,23 +52,29 @@ interface Props {
 }
 
 const Select: FC<Props> = (props) => {
-  const { placeholder, options, disabled, value = [], isMultiSelect, onChange } = props;
-  const [showDropdown, setShowDropdown] = React.useState(false);
-  const listboxReference = useRef<HTMLUListElement>(null);
-  const [focusedIndex, setFocusedIndex] = React.useState<number>(0);
-  const selectedoptions = React.useMemo<Array<Option>>((): Array<Option> => {
+  let { placeholder, options, disabled, value = [], isMultiSelect, onChange } = props;
+  let [showDropdown, setShowDropdown] = React.useState(false);
+  let listboxReference = useRef<HTMLUListElement>(null);
+  let [focusedIndex, setFocusedIndex] = React.useState<number>(0);
+  let selectedoptions = React.useMemo<Array<Option>>((): Array<Option> => {
+    // @ts-ignore
     return value
       .map((currentValue) => options.find((option) => option.value === currentValue))
       .filter((option) => !!option);
-  }, [value]);
-  const label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
+  }, [value, options]);
+  let label = selectedoptions.length > 0 ? selectedoptions.map((option) => option.label).join(', ') : placeholder;
+  let hasListboxReference = listboxReference && typeof listboxReference.current;
+  let handleClickOutside = useCallback(() => {
+    setShowDropdown(false);
+  }, []);
+  let containerRef = useClickOutside(handleClickOutside);
 
   useEffect(() => {
     if (listboxReference && listboxReference.current && showDropdown) {
       setFocusedIndex(0);
       listboxReference.current.focus();
     }
-  }, [showDropdown, listboxReference && typeof listboxReference.current]);
+  }, [showDropdown, hasListboxReference]);
 
   const handleChange = (newValue: Array<string>) => {
     if (onChange) {
@@ -75,14 +82,18 @@ const Select: FC<Props> = (props) => {
     }
   };
 
-  const handleSelectOption = (selectedValue: string) => {
-    const foundIndex = value.findIndex((currentValue: string) => currentValue === selectedValue);
+  const handleSelectOption = (selectedIndex: number) => {
+    let option = options[selectedIndex];
+    let selectedValue = option.value;
+    let foundIndex = value.findIndex((currentValue: string) => currentValue === selectedValue);
     if (!isMultiSelect) {
       setShowDropdown(false);
       return handleChange(foundIndex > -1 ? [] : [selectedValue]);
     }
 
-    const valueClone = [...value];
+    setFocusedIndex(selectedIndex);
+
+    let valueClone = [...value];
     if (foundIndex > -1) {
       valueClone.splice(foundIndex, 1);
     } else {
@@ -102,13 +113,13 @@ const Select: FC<Props> = (props) => {
   };
 
   return (
-    <div className={classNames(styles.select, { [styles.disabled]: disabled })}>
+    <div className={classNames(styles.select, { [styles.disabled]: disabled })} ref={containerRef}>
       <button
         className={styles.trigger}
-        type='button'
+        type="button"
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
-        aria-haspopup='listbox'
+        aria-haspopup="listbox"
         aria-expanded={showDropdown}
         disabled={disabled}
       >
@@ -116,75 +127,67 @@ const Select: FC<Props> = (props) => {
         <DropDownIcon />
       </button>
       <DropDownMenu isOpen={showDropdown && !disabled}>
-        <ul
-          role='listbox'
-          tabIndex={-1}
-          ref={listboxReference}
-          onBlur={() => setShowDropdown(false)}
-          onKeyDown={(event) => {
-            // Down should select next option
-            if (event.key === 'ArrowDown') {
-              if (focusedIndex < options.length - 1) {
-                setFocusedIndex(focusedIndex + 1);
-              } else {
-                setFocusedIndex(0);
-              }
-            }
-
-            // Up should select option above current selection
-            if (event.key === 'ArrowUp') {
-              if (focusedIndex > 0) {
-                setFocusedIndex(focusedIndex - 1);
-              } else {
-                setFocusedIndex(options.length - 1);
-              }
-            }
-
-            // Home should select first option
-            if (event.keyCode === 36) {
-              setFocusedIndex(0);
-            }
-
-            // End should select last option
-            if (event.keyCode === 35) {
-              setFocusedIndex(options.length - 1);
-            }
-
-            // Enter or space
-            if (event.key === 'Enter' || event.keyCode === 32) {
-              handleSelectOption(options[focusedIndex].value);
-            }
-
-            // Close using Escape
-            if (event.key === 'Escape') {
-              setShowDropdown(false);
-            }
-          }}
-        >
+        <ul role="listbox" ref={listboxReference}>
           {options.map((option, i) => {
-            const isSelected = value.includes(option.value);
+            let isSelected = value.includes(option.value);
+            let isFocused = focusedIndex === i;
 
             return (
-              <li
-                className={classNames(styles.option, { [styles.focusedoption]: focusedIndex === i })}
-                onClick={(event) => {
-                  // This is to prevent focus issues
-                  event.preventDefault();
-
-                  // Set focused element and emit value
-                  setFocusedIndex(i);
-                  handleSelectOption(option.value);
-                }}
-                onKeyDown={() => {
-                  // Keyboard handling is done by the listbox
-                }}
-                aria-selected={isSelected}
-                role='option'
+              <Option
                 key={option.value}
+                isSelected={isSelected}
+                isFocused={isFocused}
+                isMultiSelect={isMultiSelect}
+                onSelect={() => {
+                  handleSelectOption(i);
+                }}
+                onKeyDown={(event: React.KeyboardEvent<HTMLLIElement>) => {
+                  // Down should select next option
+                  if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+
+                    if (focusedIndex < options.length - 1) {
+                      setFocusedIndex(focusedIndex + 1);
+                    } else {
+                      setFocusedIndex(0);
+                    }
+                  }
+
+                  // Up should select option above current selection
+                  if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+
+                    if (focusedIndex > 0) {
+                      setFocusedIndex(focusedIndex - 1);
+                    } else {
+                      setFocusedIndex(options.length - 1);
+                    }
+                  }
+
+                  // Home should select first option
+                  if (event.keyCode === 36) {
+                    event.preventDefault();
+
+                    setFocusedIndex(0);
+                  }
+
+                  // End should select last option
+                  if (event.keyCode === 35) {
+                    event.preventDefault();
+
+                    setFocusedIndex(options.length - 1);
+                  }
+
+                  // Close using Escape
+                  if (event.key === 'Escape') {
+                    event.preventDefault();
+
+                    setShowDropdown(false);
+                  }
+                }}
               >
-                {isMultiSelect && <CheckboxIcon isActive={isSelected} />}
-                <span>{option.label}</span>
-              </li>
+                {option.label}
+              </Option>
             );
           })}
         </ul>

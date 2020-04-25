@@ -56,39 +56,39 @@ const Form: FC<Props> = ({ onSubmit }) => {
 
   useEffect(() => {
     register({ name: 'marketingRole' });
-  }, []);
+  }, [register]);
 
   return (
     <form onSubmit={handleSubmit(mapSubmitHandler)}>
       <TwoColumnGrid>
         <FormInput
           fillWidth
-          label='Firstname *'
-          name='firstname'
+          label="Firstname *"
+          name="firstname"
           ref={register({ required: true })}
           error={errors.firstname && 'First name is required.'}
         />
         <FormInput
           fillWidth
-          label='Lastname *'
-          name='lastname'
+          label="Lastname *"
+          name="lastname"
           ref={register({ required: true })}
           error={errors.lastname && 'Last name is required.'}
         />
         <FormInput
           fillWidth
-          label='E-Mail *'
-          name='email'
-          type='email'
+          label="E-Mail *"
+          name="email"
+          type="email"
           ref={register({ required: true })}
           error={errors.email && 'E-Mail is required.'}
         />
-        <FormInput fillWidth label='Phone Number' name='phone' ref={register({})} />
-        <CheckBox label='Customer Accepts Marketing' name='acceptMarketing' id='acceptMarketing' ref={register({})} />
-        <Label title='Marketing Role'>
+        <FormInput fillWidth label="Phone Number" name="phone" ref={register({})} />
+        <CheckBox label="Customer Accepts Marketing" name="acceptMarketing" ref={register({})} />
+        <Label title="Marketing Role">
           <Select
             options={[...MARKETING_ROLE_OPTIONS]}
-            placeholder='Select a marketing role'
+            placeholder="Select a marketing role"
             value={marketingRoleValue}
             onChange={(selectedOptions) => {
               setMarketingRoleValue(selectedOptions);
@@ -97,7 +97,7 @@ const Form: FC<Props> = ({ onSubmit }) => {
             isMultiSelect
           />
         </Label>
-        <Button size='big' type='submit'>
+        <Button size="big" type="submit">
           Submit
         </Button>
       </TwoColumnGrid>
