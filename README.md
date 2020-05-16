@@ -4,7 +4,7 @@ My solution to the Blue Receipt coding challenge.
 
 I've mainly made this as I just wanted to see how hard it would be to make an accessible select.
 
-Also I'm currently kind of looking for a remote job. So, if anyone who's reading this is hiring, hit me up.
+Note: this repo does not contain any finished or accessible components that anyone should use, this was just a small coding challenge, to get proper accesible inputs refer to complete libraries that are maintained by accessibility experts and have proper funding.
 
 ## Challenge
 
